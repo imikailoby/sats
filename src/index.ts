@@ -1,6 +1,4 @@
-export const name = "@imikailoby/sats";
-export const version = "0.0.1";
-
-export function ping(): string {
-  return `${name}@${version}`;
-}
+export * from "./types";
+export * from "./net";
+export * from "./keys";
+export * from "./addresses";
