@@ -6,9 +6,10 @@ import { BroadcastError, ProviderError } from "../core/errors";
  * Create Esplora-compatible provider bound to baseUrl.
  * Uses GET/POST helpers with timeouts and maps to domain errors.
  */
-export function esplora(baseUrl: string): Provider {
-  const J = async (path: string) => getJson<any>(baseUrl, path, { timeoutMs: 4000 });
-  const T = async (path: string, body: string) => postText(baseUrl, path, body, { timeoutMs: 4000 });
+export function esplora(baseUrl: string, opts: { timeoutMs?: number } = {}): Provider {
+  const timeoutMs = opts.timeoutMs ?? 4000;
+  const J = async (path: string) => getJson<any>(baseUrl, path, { timeoutMs });
+  const T = async (path: string, body: string) => postText(baseUrl, path, body, { timeoutMs });
 
   return {
     async getAddressUtxos(addr: string): Promise<Utxo[]> {

@@ -10,8 +10,9 @@ describe('providers', () => {
 
     it('provider chain tries in order (integration, network optional)', async () => {
         const p = createProviderChain(
-            providers.mempool(true),
-            providers.blockstream(true)
+            providers.mempool(true, { timeoutMs: 1000 }),
+            providers.blockstream(true, { timeoutMs: 1000 }),
+            { timeoutMs: 1000, backoffMs: [0, 1, 2] }
         );
 
         const addr = 'tb1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv9jx3r';

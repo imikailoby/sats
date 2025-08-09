@@ -25,7 +25,10 @@ describe('e2e: provider chain failover & timeout (mocked fetch)', () => {
             }
 
             if (url.startsWith(HANG)) {
-                return new Promise(() => { /* never resolve */ });
+                return new Promise((resolve) => {
+                    const t = setTimeout(() => resolve(new Response('{}', { status: 200 })), 60_000);
+                    (t as any)?.unref?.();
+                });
             }
 
             if (url.startsWith(OK)) {
@@ -55,8 +58,9 @@ describe('e2e: provider chain failover & timeout (mocked fetch)', () => {
 
     it('falls over from first (failing) to second (ok) provider', async () => {
         const chain = createProviderChain(
-            providers.esplora(FAIL),
-            providers.esplora(OK),
+            providers.esplora(FAIL, { timeoutMs: 100 }),
+            providers.esplora(OK, { timeoutMs: 100 }),
+            { timeoutMs: 100, backoffMs: [0, 1, 2] }
         );
 
         const utxos = await chain.getAddressUtxos(addr);
@@ -75,8 +79,9 @@ describe('e2e: provider chain failover & timeout (mocked fetch)', () => {
 
     it('respects timeout: first provider hangs, second succeeds', async () => {
         const chain = createProviderChain(
-            providers.esplora(HANG),
-            providers.esplora(OK)
+            providers.esplora(HANG, { timeoutMs: 50 }),
+            providers.esplora(OK, { timeoutMs: 100 }),
+            { timeoutMs: 100, backoffMs: [0, 1, 2] }
         );
 
         const utxos = await chain.getAddressUtxos(addr);

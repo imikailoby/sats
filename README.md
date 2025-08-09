@@ -3,7 +3,7 @@
 **Minimalistic, non-custodial Bitcoin SDK in TypeScript.**  
 Keys and signatures stay local. On-chain address derivation (BIP84/P2WPKH), **PSBT** build/sign/finalize, **Esplora** providers (Blockstream/Mempool), and provider chain with timeouts & backoff.
 
-> **Runtime:** Node 18+ (20+ recommended) — for global `fetch`.  
+> **Runtime:** Node 20+ — global `fetch` and ESM.  
 > **ESM:** This package is ESM-only. For CommonJS, use dynamic `import()` or bundle accordingly.
 
 ---
@@ -47,8 +47,9 @@ console.log(recv1.address, recv2.address); // tb1...
 import { providers, createProviderChain } from "@imikailoby/sats";
 
 const p = createProviderChain(
-  providers.mempool(true),      // testnet
-  providers.blockstream(true)   // fallback
+  providers.mempool(true, { timeoutMs: 2000 }),      // testnet
+  providers.blockstream(true, { timeoutMs: 2000 }),   // fallback
+  { timeoutMs: 2000, backoffMs: [0, 50, 100] }        // chain options (optional)
 );
 
 const utxos = await p.getAddressUtxos("<tb1...>");
@@ -79,7 +80,11 @@ signPsbt(psbt, wif, true);      // sign
 const { hex, txid } = finalizePsbt(psbt); // raw tx + txid
 
 // broadcast (if provider supports /tx):
-const chain = createProviderChain(providers.mempool(true), providers.blockstream(true));
+const chain = createProviderChain(
+  providers.mempool(true, { timeoutMs: 2000 }),
+  providers.blockstream(true, { timeoutMs: 2000 }),
+  { timeoutMs: 2000, backoffMs: [0, 50, 100] }
+);
 await chain.broadcast?.(hex);
 ```
 
@@ -108,17 +113,17 @@ await chain.broadcast?.(hex);
 - `p2wpkhAddress(pubkey: Buffer, testnet?): { address: string; scriptPubKey: string }`
 
 ### Providers (Esplora)
-- `providers.blockstream(testnet?: boolean): Provider`
-- `providers.mempool(testnet?: boolean): Provider`
-- `providers.esplora(baseUrl: string): Provider`
+- `providers.blockstream(testnet?: boolean, opts?: { timeoutMs?: number }): Provider`
+- `providers.mempool(testnet?: boolean, opts?: { timeoutMs?: number }): Provider`
+- `providers.esplora(baseUrl: string, opts?: { timeoutMs?: number }): Provider`
 
 **Provider**:
 - `getAddressUtxos(address): Promise<Utxo[]>`
 - `getAddressBalance(address): Promise<{ funded: number; spent: number }>`
 - `broadcast?(rawHex): Promise<{ txid: string }>` — if endpoint available (Mempool/Blockstream have it)
 
-- `createProviderChain(...providers: Provider[]): Provider`  
-  Sequential retries with timeout and simple backoff.
+- `createProviderChain(...providers: Provider[], options?: { timeoutMs?: number; backoffMs?: number[] }): Provider`  
+  Sequential retries with timeout and simple backoff. Options override defaults for the chain.
 
 ### PSBT
 - `buildPsbt({ utxos, outputs, changeAddress, fee, testnet? }): Psbt`  

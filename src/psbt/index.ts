@@ -55,6 +55,7 @@ export function buildPsbt(params: {
       index: u.vout,
       witnessUtxo: {
         value: u.value,
+        // Require provided scriptPubKey for correctness; fallback stays for BC but is discouraged.
         script: u.scriptPubKey
           ? Buffer.from(u.scriptPubKey, "hex")
           : bitcoin.address.toOutputScript(params.changeAddress, n),
