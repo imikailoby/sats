@@ -3,5 +3,6 @@ export * from "./net";
 export * from "./keys";
 export * from "./addresses";
 
+export { buildPsbt, signPsbt, finalizePsbt } from "./psbt";
 export { createProviderChain } from "./providers/base";
 export { providers } from "./providers/presets";
