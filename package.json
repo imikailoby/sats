@@ -1,6 +1,6 @@
 {
   "name": "@imikailoby/sats",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Tiny non-custodial Bitcoin SDK (TS) — keys, addresses, PSBT, provider chain",
   "author": "Mikhail Prosmitskiy",
   "type": "module",
@@ -13,6 +13,9 @@
     }
   },
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -w",
