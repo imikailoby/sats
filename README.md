@@ -18,7 +18,7 @@ pnpm add @imikailoby/sats
 
 ---
 
-## Features (v0.1)
+## Features (v1.0.0)
 
 - 🔐 **Non-custodial**: BIP39 → BIP32 (BIP84), P2WPKH addresses, keys never leave your process.
 - 🧩 **PSBT (BIP-174)**: Build, sign, and finalize ready-to-broadcast transactions.

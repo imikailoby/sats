@@ -56,7 +56,7 @@ describe('e2e: provider chain failover & timeout (mocked fetch)', () => {
     it('falls over from first (failing) to second (ok) provider', async () => {
         const chain = createProviderChain(
             providers.esplora(FAIL),
-            providers.esplora(OK)
+            providers.esplora(OK),
         );
 
         const utxos = await chain.getAddressUtxos(addr);
