@@ -1,0 +1,35 @@
+{
+  "name": "@imikailoby/sats",
+  "version": "0.0.1",
+  "description": "Tiny non-custodial Bitcoin SDK (TS) — keys, addresses, PSBT, provider chain",
+  "author": "Mikhail Prosmitskiy",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -w",
+    "test": "node -e \"console.log('no tests yet')\"",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "bitcoin",
+    "psbt",
+    "non-custodial",
+    "sdk",
+    "typescript",
+    "esplora"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imikailoby/sats.git"
+  }
+}
